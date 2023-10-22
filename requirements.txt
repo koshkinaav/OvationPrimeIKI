@@ -1,2 +1,11 @@
 -e git+https://github.com/lkilcommons/nasaomnireader.git#egg=nasaomnireader
 
+
+numpy~=1.26.1
+geospacepy~=0.2.2
+aacgmv2~=2.6.3
+scipy~=1.11.3
+ovationpyme~=0.1.0
+Logbook~=1.7.0
+matplotlib~=3.8.0
+setuptools~=65.5.1
