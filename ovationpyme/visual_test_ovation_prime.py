@@ -171,35 +171,36 @@ def draw_seasonal_flux(seasonN='summer', seasonS='winter', atype='diff', jtype='
 if __name__=='__main__':
     seasonN = 'summer'
     seasonS = 'winter'
-    atype = 'diff'
+    atype = 'ions'
     jtype = 'energy'
     tfmt = '%Y%m%d'
+    day = 1
 
 
     #Times given in figure 2 of Cousins et. al. 2015
-    dt1 = datetime.datetime(2011, 11, 30, 12, 10, 0)
-    dt2 = datetime.datetime(2011, 11, 29, 7, 40, 0)
-    dt3 = datetime.datetime(2011, 11, 29, 0, 50, 0)
+    dt1 = datetime.datetime(2023, 9, day, 12, 10, 0)
+    dt2 = datetime.datetime(2023, 9, day, 7, 40, 0)
+    dt3 = datetime.datetime(2023, 9, day, 0, 50, 0)
 
     for dt in [dt1, dt2, dt3]:
-        new_mlat, new_mlt = np.meshgrid(np.linspace(60., 80., 40.), np.linspace(2., 6., 30.))
+        new_mlat, new_mlt = np.meshgrid(np.linspace(60, 80, 40), np.linspace(2, 6, 30))
         fiN = draw_interpolated_conductance(new_mlat, new_mlt, dt, 'N')
-        fiN.savefig('ovation_conductance_interp_N_{0}.png'.format(dt.strftime(tfmt)))
+        fiN.savefig('images/ovation_conductance_interp_N_{0}.png'.format(dt.strftime(tfmt)))
 
         fiS = draw_interpolated_conductance(new_mlat, new_mlt, dt, 'N')
-        fiS.savefig('ovation_conductance_interp_S_{0}.png'.format(dt.strftime(tfmt)))
+        fiS.savefig('images/ovation_conductance_interp_S_{0}.png'.format(dt.strftime(tfmt)))
 
         f2N = draw_conductance(dt, 'N')
-        f2N.savefig('ovation_conductance_N_{0}.png'.format(dt.strftime(tfmt)))
+        f2N.savefig('images/ovation_conductance_N_{0}.png'.format(dt.strftime(tfmt)))
 
         f2S = draw_conductance(dt, 'S')
-        f2S.savefig('ovation_conductance_S_{0}.png'.format(dt.strftime(tfmt)))
+        f2S.savefig('imagesovation_conductance_S_{0}.png'.format(dt.strftime(tfmt)))
 
         f1 = draw_weighted_flux(dt)
-        f1.savefig('ovation_combflux_{0}_{1}_{2}.png'.format(atype, jtype, dt.strftime(tfmt)))
+        f1.savefig('images/ovation_combflux_{0}_{1}_{2}.png'.format(atype, jtype, dt.strftime(tfmt)))
 
         f3, f4 = draw_seasonal_flux(seasonN=seasonN, seasonS=seasonS, atype=atype, jtype=jtype)
-        f3.savefig('ovation_rawflux_N{0}_S{1}_{2}_{3}.png'.format(seasonN, seasonS, atype, jtype))
+        f3.savefig('images/ovation_rawflux_N{0}_S{1}_{2}_{3}.png'.format(seasonN, seasonS, atype, jtype))
 
         for f in [fiN, fiS, f2N, f2S, f1, f3, f4]:
             pp.close(f)
