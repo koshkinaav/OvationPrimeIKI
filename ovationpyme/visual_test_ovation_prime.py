@@ -7,12 +7,13 @@ import ovation_prime
 import ovation_utilities
 from geospacepy import satplottools, special_datetime
 
+
 def draw_interpolated_conductance(new_mlat_grid, new_mlt_grid, dt, hemi):
     """
     Interpolate hall and pedersen conductance
     onto grid described by mlat_grid, mlt_grid
     """
-    estimator = ovation_prime.ConductanceEstimator(fluxtypes=['diff','mono'])
+    estimator = ovation_prime.ConductanceEstimator(fluxtypes=['diff', 'mono'])
 
     mlatgrid, mltgrid, pedgrid, hallgrid = estimator.get_conductance(dt, hemi=hemi, auroral=True, solar=True)
 
@@ -43,14 +44,15 @@ def draw_interpolated_conductance(new_mlat_grid, new_mlt_grid, dt, hemi):
     f.colorbar(mappableP, ax=aP)
 
     f.suptitle("OvationPyme Interpolated Conductance {0} Hemisphere at {1}".format(hemi, dt.strftime('%c')),
-            fontweight='bold')
+               fontweight='bold')
     return f
+
 
 def draw_conductance(dt, hemi):
     """
     Get the hall and pedersen conductance for one date and hemisphere
     """
-    estimator = ovation_prime.ConductanceEstimator(fluxtypes=['diff','mono'])
+    estimator = ovation_prime.ConductanceEstimator(fluxtypes=['diff', 'mono'])
 
     mlatgrid, mltgrid, pedgrid, hallgrid = estimator.get_conductance(dt, hemi=hemi, auroral=True, solar=True)
 
@@ -75,15 +77,16 @@ def draw_conductance(dt, hemi):
     f.colorbar(mappableP, ax=aP)
 
     f.suptitle("OvationPyme Conductance Output {0} Hemisphere at {1} \n".format(hemi, dt.strftime('%c')),
-            fontweight='bold')
+               fontweight='bold')
     return f
+
 
 def draw_weighted_flux(dt, atype='diff', jtype='energy'):
     """
     Test automatic generation of omni_intervals in ovation_utilities
     also by not specifying a start and end time for the FluxEstimator
     """
-    estimator = ovation_prime.FluxEstimator(atype,jtype)
+    estimator = ovation_prime.FluxEstimator(atype, jtype)
 
     mlatgridN, mltgridN, fluxgridN = estimator.get_flux_for_time(dt, hemi='N')
     mlatgridS, mltgridS, fluxgridS = estimator.get_flux_for_time(dt, hemi='S')
@@ -106,18 +109,19 @@ def draw_weighted_flux(dt, atype='diff', jtype='energy'):
     mappableN = aN.pcolormesh(XN, YN, fluxgridN, vmin=0, vmax=2)
     mappableS = aS.pcolormesh(XS, YS, fluxgridS, vmin=0, vmax=2)
 
-    #aN.set_title("Northern Hemisphere Flux")
-    #aS.set_title("Southern Hemisphere Flux")
+    # aN.set_title("Northern Hemisphere Flux")
+    # aS.set_title("Southern Hemisphere Flux")
 
     f.colorbar(mappableN, ax=aN)
     f.colorbar(mappableS, ax=aS)
 
     f.suptitle("OvationPyme Auroral Model Flux Output at {0} \n AuroralType:{1}, FluxType:{2}".format(dt.strftime('%c'),
                                                                                                       atype, jtype),
-                                                                                                      fontweight='bold')
+               fontweight='bold')
     return f
 
-def draw_seasonal_flux(seasonN='summer', seasonS='winter', atype='diff', jtype='energy', dF = 2134.17):
+
+def draw_seasonal_flux(seasonN='summer', seasonS='winter', atype='diff', jtype='energy', dF=2134.17):
     dF = 2134.17
 
     estimatorN = ovation_prime.SeasonalFluxEstimator(seasonN, atype, jtype)
@@ -150,25 +154,30 @@ def draw_seasonal_flux(seasonN='summer', seasonS='winter', atype='diff', jtype='
 
     mappableN = aN.pcolormesh(XN, YN, fluxgridN, vmin=0, vmax=2)
     mappableS = aS.pcolormesh(XS, YS, fluxgridS, vmin=0, vmax=2)
-    mappableNS = a2.pcolormesh(XN, YN, (fluxgridS+fluxgridN)/2, vmin=0, vmax=2)
+    mappableNS = a2.pcolormesh(XN, YN, (fluxgridS + fluxgridN) / 2, vmin=0, vmax=2)
 
-    #aN.set_title("Northern Hemisphere Flux")
-    #aS.set_title("Southern Hemisphere Flux")
+    # aN.set_title("Northern Hemisphere Flux")
+    # aS.set_title("Southern Hemisphere Flux")
 
     f.colorbar(mappableN, ax=aN)
     f.colorbar(mappableS, ax=aS)
     f.colorbar(mappableNS, ax=a2)
 
-    f.suptitle("OvationPyme Auroral Model Raw Flux Output \n Season:{0}, AuroralType:{1}, FluxType:{2}, Newell Coupling:{3:.3f}".format(seasonN, atype, jtype, dF),
-            fontweight='bold')
+    f.suptitle(
+        "OvationPyme Auroral Model Raw Flux Output \n Season:{0}, AuroralType:{1}, FluxType:{2}, Newell Coupling:{"
+        "3:.3f}".format(
+            seasonN, atype, jtype, dF),
+        fontweight='bold')
 
-    f2.suptitle("OvationPyme Combined Hemisphere Output \n Season:{0}, AuroralType:{1}, FluxType:{2}, Newell Coupling:{3:.3f}".format(seasonS, atype, jtype, dF),
-            fontweight='bold')
+    f2.suptitle(
+        "OvationPyme Combined Hemisphere Output \n Season:{0}, AuroralType:{1}, FluxType:{2}, Newell Coupling:{3:.3f}".format(
+            seasonS, atype, jtype, dF),
+        fontweight='bold')
 
     return f, f2
 
 
-if __name__=='__main__':
+if __name__ == '__main__':
     seasonN = 'summer'
     seasonS = 'winter'
     atype = 'ions'
@@ -176,8 +185,7 @@ if __name__=='__main__':
     tfmt = '%Y%m%d'
     day = 1
 
-
-    #Times given in figure 2 of Cousins et. al. 2015
+    # Times given in figure 2 of Cousins et. al. 2015
     dt1 = datetime.datetime(2023, 9, day, 12, 10, 0)
     dt2 = datetime.datetime(2023, 9, day, 7, 40, 0)
     dt3 = datetime.datetime(2023, 9, day, 0, 50, 0)

@@ -9,3 +9,4 @@ ovationpyme~=0.1.0
 Logbook~=1.7.0
 matplotlib~=3.8.0
 setuptools~=65.5.1
+flask~=3.0.0

@@ -99,6 +99,7 @@ def calc_coupling(Bx, By, Bz, V):
 
 @cache_omni_interval('1min')
 def read_solarwind(dt, oi):
+
     """Get the solar wind parameters involved in the Newell coupling
     function at an hourly cadence (regardless of the cadence of the
     omni_interval input oi)
