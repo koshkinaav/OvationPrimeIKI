@@ -1,14 +1,18 @@
-from ovationpyme.visual_test_ovation_prime import draw_weighted_flux, draw_seasonal_flux
+from ovationpyme.visual_test_ovation_prime import draw_weighted_flux, draw_seasonal_flux, draw_conductance
 import io
+import sys
 from datetime import datetime
 import matplotlib.pyplot as plt
 from flask import Flask, request, jsonify, send_file, Response
 
 app = Flask(__name__)
 
+log_file = 'ovation_prime_output.log'
+sys.stdout = open(log_file, 'w')
 
 # http://localhost:5000/api/v1/draw_weighted_flux?dt=2023-11-28T10:00:00&atype=diff&jtype=energy
 # http://localhost:5000/api/v1/draw_seasonal_flux?seasonN=winter&seasonS=summer&atype=diff&jtype=energy
+# http://localhost:5000/api/v1/draw_conductance?dt=2023-11-28T10:00:00&hemi=N
 
 @app.route('/api/v1/draw_weighted_flux', methods=['GET'])
 def weighted_flux():
@@ -128,6 +132,53 @@ def seasonal_flux():
     plt.close(fig2)
     # Возврат объединенной картинки в качестве файла
     return send_file(combined_image, mimetype='image/png')
+
+
+@app.route('/api/v1/draw_conductance', methods=['GET'])
+def conductance():
+    dt = request.args.get('dt')
+    hemi = request.args.get('hemi')
+    # Проверка обязательности всех параметров
+    missing_params = []
+    param_formats = {
+        'dt': 'yyyy-mm-ddThh:mm:ss',
+        'hemi': 'N or S'
+    }
+
+    if not dt:
+        missing_params.append('dt')
+    if not hemi:
+        missing_params.append('hemi')
+
+    if len(missing_params) > 0:
+        error_message = 'Missing required parameters: '
+        error_message += ', '.join(missing_params)
+        error_formats = [f"{param} - {param_formats[param]}" for param in missing_params]
+        error_message += '; '
+        error_message += ''.join(error_formats)
+        return jsonify({'error': error_message}), 400
+
+    try:
+        parsed_dt = datetime.strptime(dt, "%Y-%m-%dT%H:%M:%S")
+        hour = parsed_dt.hour
+        minutes = parsed_dt.minute
+        seconds = parsed_dt.second
+        dt = datetime(parsed_dt.year, parsed_dt.month, parsed_dt.day, hour, minutes, seconds)
+    except ValueError:
+        return jsonify({'error': f'Invalid format for dt parameter. Expected format: 2023-03-02T10:00:00'}), 400
+
+    valid_hemi = ['N', 'S']
+
+    if hemi not in valid_hemi:
+        return jsonify(
+            {'error': f'Invalid value for seasonN parameter. Allowed values: {", ".join(valid_hemi)}'}), 400
+
+    f = draw_conductance(dt, hemi)
+    image_stream = io.BytesIO()
+    plt.savefig(image_stream, format='png')
+    image_stream.seek(0)
+    plt.close(f)
+    return send_file(image_stream, mimetype='image/png')
 
 
 if __name__ == '__main__':
