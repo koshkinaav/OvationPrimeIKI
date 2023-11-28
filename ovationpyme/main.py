@@ -117,27 +117,17 @@ def seasonal_flux():
         return jsonify({'error': f'Invalid value for jtype parameter. Allowed values: {", ".join(valid_jtypes)}'}), 400
 
     fig1, fig2 = draw_seasonal_flux(seasonN, seasonS, atype, jtype)
-    # Сохранение рисунков в памяти в формате PNG
-    image_stream1 = io.BytesIO()
-    fig1.savefig(image_stream1, format='png')
-    image_stream1.seek(0)
+    combined_image = io.BytesIO()
 
-    image_stream2 = io.BytesIO()
-    fig2.savefig(image_stream2, format='png')
-    image_stream2.seek(0)
-
+    fig1.savefig(combined_image, format='png')
+    fig2.savefig(combined_image, format='png')
+    # Переход на начало файла
+    combined_image.seek(0)
+    # Закрытие рисунков
     plt.close(fig1)
     plt.close(fig2)
-
-    # Создание генератора для потоковой передачи рисунков
-    def image_generator():
-        yield (b'--frame\r\n'
-               b'Content-Type: image/png\r\n\r\n' + image_stream1.read() + b'\r\n\r\n')
-        yield (b'--frame\r\n'
-               b'Content-Type: image/png\r\n\r\n' + image_stream2.read() + b'\r\n\r\n')
-
-    # Возвращение обоих рисунков в формате multipart/x-mixed-replace
-    return Response(image_generator(), mimetype='multipart/x-mixed-replace; boundary=frame')
+    # Возврат объединенной картинки в качестве файла
+    return send_file(combined_image, mimetype='image/png')
 
 
 if __name__ == '__main__':
