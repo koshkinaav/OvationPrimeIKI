@@ -160,7 +160,7 @@ def hourly_solarwind_for_average(dt, oi):
     return sw4avg
 
 
-@cache_omni_interval('1min')
+# @cache_omni_interval('1min')
 def calc_avg_solarwind(dt, oi):
     """
     Calculates a weighted average of several
@@ -174,8 +174,9 @@ def calc_avg_solarwind(dt, oi):
     """
     prev_hour_weight = 0.65
 
-    sw4avg = hourly_solarwind_for_average(dt)
-    n = sw4avg['jd'].size  # Number of hourly datapoints to be averaged
+    # sw4avg = hourly_solarwind_for_average(dt, oi)
+    sw4avg = read_solarwind(dt, oi)
+    n = sw4avg['jd'].size  # Number of hourly datap# oints to be averaged
     weights = [prev_hour_weight ** n_hours_back for n_hours_back in range(n)[::-1]]  # reverse the range
 
     # Calculate weighted averages
@@ -203,9 +204,9 @@ def get_daily_f107(dt, oi):
     return omf107[imatch]
 
 
-def calc_dF(dt):
+def calc_dF(dt, oi):
     """dF==newell coupling for Ovation Prime"""
-    return calc_avg_solarwind(dt)['Ec']
+    return calc_avg_solarwind(dt, oi)['Ec']
 
 
 def robinson_auroral_conductance(numflux, eavg):

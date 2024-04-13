@@ -81,15 +81,14 @@ def draw_conductance(dt, hemi):
     return f
 
 
-def draw_weighted_flux(dt, atype='diff', jtype='energy'):
+def draw_weighted_flux(dt, oi, satellite, atype='diff', jtype='energy'):
     """
     Test automatic generation of omni_intervals in ovation_utilities
     also by not specifying a start and end time for the FluxEstimator
     """
     estimator = ovation_prime.FluxEstimator(atype, jtype)
-
-    mlatgridN, mltgridN, fluxgridN = estimator.get_flux_for_time(dt, hemi='N')
-    mlatgridS, mltgridS, fluxgridS = estimator.get_flux_for_time(dt, hemi='S')
+    mlatgridN, mltgridN, fluxgridN = estimator.get_flux_for_time(dt, oi, hemi='N')
+    mlatgridS, mltgridS, fluxgridS = estimator.get_flux_for_time(dt, oi, hemi='S')
 
     f = pp.figure(figsize=(11, 5))
     aN = f.add_subplot(121)
@@ -115,7 +114,7 @@ def draw_weighted_flux(dt, atype='diff', jtype='energy'):
     f.colorbar(mappableN, ax=aN)
     f.colorbar(mappableS, ax=aS)
 
-    f.suptitle("OvationPyme Auroral Model Flux Output at {0} \n AuroralType:{1}, FluxType:{2}".format(dt.strftime('%c'),
+    f.suptitle(f"OvationPyme Auroral Model Flux From {satellite} Output at {0} \n AuroralType:{1}, FluxType:{2}".format(dt.strftime('%c'),
                                                                                                       atype, jtype),
                fontweight='bold')
     return f

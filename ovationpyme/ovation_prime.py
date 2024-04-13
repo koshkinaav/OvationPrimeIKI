@@ -497,7 +497,7 @@ class FluxEstimator(object):
             gridmlts = gridmltsN
         return gridmlats, gridmlts, seasonfluxesN, seasonfluxesS
 
-    def get_flux_for_time(self, dt,
+    def get_flux_for_time(self, dt, oi,
                           hemi='N', return_dF=False, combine_hemispheres=True):
         """
         The weighting of the seasonal flux for the different hemispheres
@@ -541,7 +541,7 @@ class FluxEstimator(object):
         else:
             raise ValueError('Invalid hemisphere {0} (use N or S)'.format(hemi))
 
-        dF = ovation_utilities.calc_dF(dt)
+        dF = ovation_utilities.calc_dF(dt, oi)
         if hasattr(self, '_dF'):
             log.warning(('Warning: Overriding real Newell Coupling {0}'.format(dF)
                          + 'with secret instance property _dF {0}'.format(self._dF)
