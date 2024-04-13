@@ -29,11 +29,11 @@ class OmniInterval:
         self._data = {
             'Epoch': list(df['Epoch']),
             'cadence': 'hourly',
-            'BX_GSE': df['BX_GSE'],
-            'BY_GSM': df['BY_GSM'],
-            'BZ_GSM': df['BZ_GSM'],
-            'proton_density': df['proton_density'],
-            'flow_speed': df['flow_speed']
+            'BX_GSE': np.array(df['BX_GSE']),
+            'BY_GSM': np.array(df['BY_GSM']),
+            'BZ_GSM': np.array(df['BZ_GSM']),
+            'proton_density': np.array(df['proton_density']),
+            'flow_speed': np.array(df['flow_speed'])
         }
 
     def __getitem__(self, key):

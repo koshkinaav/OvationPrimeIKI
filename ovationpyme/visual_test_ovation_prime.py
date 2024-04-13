@@ -81,7 +81,7 @@ def draw_conductance(dt, hemi):
     return f
 
 
-def draw_weighted_flux(dt, oi, satellite, atype='diff', jtype='energy'):
+def draw_weighted_flux(dt, oi, satellite, atype='diff', jtype='energy', only_value=False):
     """
     Test automatic generation of omni_intervals in ovation_utilities
     also by not specifying a start and end time for the FluxEstimator
@@ -89,6 +89,12 @@ def draw_weighted_flux(dt, oi, satellite, atype='diff', jtype='energy'):
     estimator = ovation_prime.FluxEstimator(atype, jtype)
     mlatgridN, mltgridN, fluxgridN = estimator.get_flux_for_time(dt, oi, hemi='N')
     mlatgridS, mltgridS, fluxgridS = estimator.get_flux_for_time(dt, oi, hemi='S')
+    if only_value:
+        return {
+            'date': str(dt),
+            'fluxN': np.sum(fluxgridN),
+            'fluxS': np.sum(fluxgridS)
+        }
 
     f = pp.figure(figsize=(11, 5))
     aN = f.add_subplot(121)

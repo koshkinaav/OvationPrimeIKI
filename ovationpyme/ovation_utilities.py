@@ -7,6 +7,7 @@ from collections import OrderedDict
 import numpy as np
 import functools
 
+import pandas as pd
 from geospacepy import special_datetime, sun
 from nasaomnireader.omnireader import omni_interval
 from logbook import Logger
