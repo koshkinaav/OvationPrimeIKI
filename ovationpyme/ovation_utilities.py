@@ -97,7 +97,7 @@ def calc_coupling(Bx, By, Bz, V):
     return Ec
 
 
-@cache_omni_interval('1min')
+# @cache_omni_interval('1min')
 def read_solarwind(dt, oi):
 
     """Get the solar wind parameters involved in the Newell coupling
@@ -126,7 +126,7 @@ def read_solarwind(dt, oi):
     return sw
 
 
-@cache_omni_interval('1min')
+# @cache_omni_interval('1min')
 def hourly_solarwind_for_average(dt, oi):
     """
     Takes a solarwind (sw) OrderedDict (output of read_solarwind)
@@ -140,7 +140,7 @@ def hourly_solarwind_for_average(dt, oi):
 
     target_jd = special_datetime.datetime2jd(dt)
 
-    sw = read_solarwind(dt)
+    sw = read_solarwind(dt, oi)
 
     # Julian date in days to time relative to target time in hours
     # with positive values indicating time before the target
